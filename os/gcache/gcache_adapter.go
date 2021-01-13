@@ -18,6 +18,8 @@ type Adapter interface {
 	// It deletes the <key> if <duration> < 0.
 	Set(key interface{}, value interface{}, duration time.Duration) error
 
+	SetWithCallback(key interface{}, value interface{}, duration time.Duration, f func(interface{})) error
+
 	// Sets batch sets cache with key-value pairs by <data>, which is expired after <duration>.
 	//
 	// It does not expire if <duration> == 0.

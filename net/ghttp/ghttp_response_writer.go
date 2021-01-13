@@ -57,7 +57,8 @@ func (w *ResponseWriter) Flush() {
 	}
 	if w.Status != 0 && !w.wroteHeader {
 		w.wroteHeader = true
-		w.writer.WriteHeader(w.Status)
+		// Comment out 2019 by Friday182, it cause the error when work with gqlgen module
+		// w.writer.WriteHeader(w.Status)
 	}
 	// Default status text output.
 	if w.Status != http.StatusOK && w.buffer.Len() == 0 {
