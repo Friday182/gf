@@ -17,5 +17,8 @@ func (item *adapterMemoryItem) IsExpired() bool {
 	if item.e >= gtime.TimestampMilli() {
 		return false
 	}
+	if item.cb != nil {
+		item.cb(item.v)
+	}
 	return true
 }

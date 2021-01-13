@@ -63,6 +63,7 @@ type adapterMemory struct {
 type adapterMemoryItem struct {
 	v interface{} // Value.
 	e int64       // Expire timestamp in milliseconds.
+	cb func(interface{})		// Add callback function
 }
 
 // Internal event item.
@@ -104,6 +105,23 @@ func (c *adapterMemory) Set(key interface{}, value interface{}, duration time.Du
 	c.data[key] = adapterMemoryItem{
 		v: value,
 		e: expireTime,
+	}
+	c.dataMu.Unlock()
+	c.eventList.PushBack(&adapterMemoryEvent{
+		k: key,
+		e: expireTime,
+	})
+	return nil
+}
+
+// It deletes the <key> if <duration> < 0.
+func (c *adapterMemory) SetWithCallback(key interface{}, value interface{}, duration time.Duration, f func(interface{})) error {
+	expireTime := c.getInternalExpire(duration)
+	c.dataMu.Lock()
+	c.data[key] = adapterMemoryItem{
+		v: value,
+		e: expireTime,
+		cb: f,
 	}
 	c.dataMu.Unlock()
 	c.eventList.PushBack(&adapterMemoryEvent{
