@@ -101,7 +101,8 @@ func (r *Response) CORS(options CORSOptions) {
 			r.Status = http.StatusOK
 		}
 		// No continue serving.
-		r.Request.ExitAll()
+		// Comment out because need Access-Control-Allow-Headers for Options
+		// r.Request.ExitAll()
 	}
 }
 
